@@ -125,7 +125,9 @@ class SemanticFilter(PluginBase):
         if len(data) > 0:
             data = cp.concatenate(data, axis=0)
             class_map = cp.amax(data, axis=0)
-            class_map_id = cp.argmax(data, axis=0)
+            class_map_id = cp.argmax(data, axis=0) + 1
+            class_map_id[class_map<0.05] = 0
+            class_map[class_map<0.05] = 0
         else:
             class_map = cp.zeros_like(elevation_map[0])
             class_map_id = cp.zeros_like(elevation_map[0], dtype=cp.int32)

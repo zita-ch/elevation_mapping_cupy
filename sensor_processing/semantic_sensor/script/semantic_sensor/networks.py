@@ -213,9 +213,10 @@ class DetectronModel:
                 indices.append(class_to_idx[channel])
                 channels.append(channel)
                 is_thing.append(True)
-            elif self.param.fusion_methods[it] in ["class_average", "class_bayesian"]:
+            else:
+            # elif self.param.fusion_methods[it] in ["class_average", "class_bayesian"]:
                 is_thing.append(False)
-                print(channel, " is not in the semantic segmentation model.")
+                print(channel, " is not in the semantic segmentation model:", name)
         categories = dict(zip(channels, indices))
         category_isthing = dict(zip(self.param.channels, is_thing))
         return categories, category_isthing
