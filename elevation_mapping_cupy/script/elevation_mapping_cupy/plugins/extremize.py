@@ -87,7 +87,8 @@ class Extremize(PluginBase):
         mask_erosion = layer_np < lower_threshold
         mask_dilation = layer_np > upper_threshold
         # Define the erosion kernel
-        kernel = np.ones((self.kernel_size, self.kernel_size), np.uint8)
+        kernel_ero = np.ones((self.kernel_size, self.kernel_size), np.uint8)
+        kernel_dil = np.ones((self.kernel_size+2, self.kernel_size+2), np.uint8)
 
         if self.reverse:
             layer_np = 1 - layer_np
@@ -96,8 +97,8 @@ class Extremize(PluginBase):
         layer_max = float(layer_np.max())
         layer_np_normalized = ((layer_np - layer_min) * 255 / (layer_max - layer_min)).astype("uint8")
 
-        eroded_norm = cv.erode(layer_np_normalized, kernel, iterations=self.iterations)
-        dilated_norm = cv.dilate(layer_np_normalized, kernel, iterations=self.iterations)
+        eroded_norm = cv.erode(layer_np_normalized, kernel_ero, iterations=self.iterations)
+        dilated_norm = cv.dilate(layer_np_normalized, kernel_dil, iterations=self.iterations)
         output_norm = layer_np_normalized.copy()
         output_norm[mask_erosion] = eroded_norm[mask_erosion]
         output_norm[mask_dilation] = dilated_norm[mask_dilation]
